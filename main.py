@@ -1,7 +1,4 @@
 import png, random
-#from primePy.primes import check as is_prime
-#from functools import cache
-
 
 def create_image_mask(rows, cutoff):
     img_mask: list[str] = []
@@ -45,8 +42,30 @@ def isPrime(n, k=5): # miller-rabin
     return True
 
 
-def main():
-    _, _, rows, info = png.Reader(filename="example.png").read()
+
+def store_number(file_name, number, width):
+
+    number_as_lines = []
+
+    while number > 0:
+        number_as_lines.append(str(number % pow(10, width)))
+        number = number // pow(10, width)
+
+    number_as_lines.reverse()
+
+    t_f_name = file_name.removesuffix('.png') + '_prime'
+
+
+    with open(t_f_name, 'w') as f:
+
+        for line in number_as_lines:
+            f.write(line + '\n')
+        
+    print("Saved as", t_f_name)
+
+
+def main(f_name: str):
+    width, height, rows, info = png.Reader(filename=f_name).read()
     
     pal: list[tuple[int, int, int]] = info["palette"]
     depth: int = pow(2, info["bitdepth"]) -1
@@ -72,7 +91,8 @@ def main():
                 cool_number = (cool_number * 10) + next_value
 
     print("Done in %s iterations" % i)
-    print(cool_number)
+
+    store_number(f_name, cool_number, width)
 
 
 if __name__ == "__main__":
